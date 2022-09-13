@@ -11,3 +11,16 @@ nav{
   justify-content: space-between;
   align-items: center;
 }
+
+.doc-display{
+  padding: 1.5em;
+  display: grid;
+  gap: 1.5em;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.doc-shortcut{
+  padding: 0.5em;
+  border: 1px solid black;
+  border-radius: 0.25em;
+}
