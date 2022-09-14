@@ -24,3 +24,18 @@ nav{
   border: 1px solid black;
   border-radius: 0.25em;
 }
+
+.doc-editor{
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.doc-editor > * {
+  width: 100%;
+}
+
+.doc-editor--input{
+  width: 100%;
+  resize: none;
+}
