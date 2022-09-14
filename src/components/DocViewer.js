@@ -1,19 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-export default function DocViewer({closeCurrentDoc, currentDoc}){
+export default function DocViewer({closeCurrentDoc, currentDoc, docEdited}){
+    const [changed, setChanged] = useState(false);
     const [editing, setEditing] = useState(false);
+
+    const changedDoc = useRef({});
+
+    function handleDocChange(newDoc){
+        changedDoc.current = newDoc;
+        if(!changed) {
+            setChanged(true);
+        }
+    }
+
+    function handleClose(){
+        if(changed){
+            docEdited(changedDoc.current);
+        } else {
+            closeCurrentDoc();
+        }
+    }
+
     return (
         <>
-          <div>
-              <button onClick={closeCurrentDoc}>Close Doc</button>
-              <button onClick={() => setEditing(!editing)}>Edit Doc</button>
-          </div>
-          <Note doc={currentDoc} editing={editing}/>
+            <div>
+                <button onClick={handleClose}>Close Doc</button>
+                <button onClick={() => setEditing(!editing)}>Edit Doc</button>
+            </div>
+            <Note doc={currentDoc} editing={editing} docChange={handleDocChange}/>
         </>
-      );
+    );
 }
 
-function Note({doc, editing}){
+function Note({doc, editing, docChange}){
     const [paragraphs, setParagraphs] = useState([]);
 
     useEffect(() => {
@@ -21,7 +40,7 @@ function Note({doc, editing}){
     }, [])
 
     function buildParagraphs(d = doc){
-        setParagraphs(Object.keys(d).reduce((arr, key) => {
+        setParagraphs(Object.keys(d).sort().reduce((arr, key) => {
             if(key !== "type"){
                 return [...arr, d[key]];
             } else {
@@ -42,6 +61,7 @@ function Note({doc, editing}){
         paras.forEach((p, index) => newDoc[`p${index + 1}`] = p);
         
         buildParagraphs(newDoc);
+        docChange(newDoc);
     }
 
     return(
