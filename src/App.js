@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { firestore } from "./firebase";
 
 import Navbar from "./components/Navbar";
+import DocViewer from "./components/DocViewer";
 
 async function getLandingDocs(){
   console.log('fetching landing from firestore');
@@ -32,15 +33,6 @@ export default function App() {
   function closeCurrentDoc(){
     setCurrentDoc({});
   }
-
-  function currentDocElement(){
-    return (
-      <>
-        <button onClick={closeCurrentDoc}>Close Doc</button>
-        <Note doc={currentDoc}/>
-      </>
-    );
-  }
   
   const docElements = docNames.map(docName => (
     <div key={docName} className="doc-shortcut"
@@ -52,18 +44,9 @@ export default function App() {
   return (
     <>
       <Navbar />
-      {currentDoc.type !== undefined ? currentDocElement()
+      {currentDoc.type !== undefined ? 
+        <DocViewer currentDoc={currentDoc} closeCurrentDoc={closeCurrentDoc} />
       : (<div className="doc-display">{docElements}</div>)}
     </>
   );
-}
-
-function Note({doc}){
-  const paragraphs = Object.keys(doc).filter(key => key !== "type");
-  const paragraphElements = paragraphs.map(p => (<p>{doc[p]}</p>))
-  return(
-    <div>
-      {paragraphElements}
-    </div>
-  )
 }
