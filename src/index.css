@@ -36,6 +36,10 @@ nav{
 }
 
 .doc-editor--input{
-  width: 100%;
+  /* width: 100%; */
+  margin: auto;
   resize: none;
+  min-height: 40px;
+  line-height: 20px;
+  overflow: hidden;
 }
