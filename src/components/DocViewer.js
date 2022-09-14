@@ -40,7 +40,9 @@ function Note({doc, editing, docChange}){
     }, [])
 
     function buildParagraphs(d = doc){
-        setParagraphs(Object.keys(d).sort().reduce((arr, key) => {
+        setParagraphs(Object.keys(d)
+            .sort() // Need this because firestore mangles the keys
+            .reduce((arr, key) => {
             if(key !== "type"){
                 return [...arr, d[key]];
             } else {
@@ -77,8 +79,8 @@ function NoteEditor({ paragraphs, handleEdit }){
     const [areaHeight, setAreaHeight] = useState(0);
 
     useEffect(() => {
-        const text = paragraphs.reduce((cur, p) => {
-            return cur + p;
+        const text = paragraphs.reduce((cur, p, currentIndex) => {
+            return cur + p + (currentIndex !== paragraphs.length - 1 ? '\n' : '');
         }, '');
         setValue(text);
         setAreaHeight(calcTextAreaHeight(text));
