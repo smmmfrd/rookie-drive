@@ -14,27 +14,45 @@ export default function DocViewer({closeCurrentDoc, currentDoc}){
 }
 
 function Note({doc, editing}){
-    const paragraphs = Object.keys(doc).reduce((arr, key) => {
-        if(key !== "type"){
-            return [...arr, doc[key]];
-        } else {
-            return arr;
-        }
-    }, []);
+    const [paragraphs, setParagraphs] = useState([]);
+
+    useEffect(() => {
+        buildParagraphs();
+    }, [])
+
+    function buildParagraphs(d = doc){
+        setParagraphs(Object.keys(d).reduce((arr, key) => {
+            if(key !== "type"){
+                return [...arr, d[key]];
+            } else {
+                return arr;
+            }
+        }, []));
+    }
+
     const paragraphElements = paragraphs.map((p, index) => (
         <p key={index}>
             {p}
         </p>
     ));
+
+    function handleEdit(newText){
+        var newDoc = { type: 'note' }
+        let paras = newText.split('\n');
+        paras.forEach((p, index) => newDoc[`p${index + 1}`] = p);
+        
+        buildParagraphs(newDoc);
+    }
+
     return(
         <div className="doc-editor">
-            {paragraphElements}
-            {editing && <NoteEditor paragraphs={paragraphs} />}
+            <div className="doc-editor--display">{paragraphElements}</div>
+            {editing && <NoteEditor paragraphs={paragraphs} handleEdit={handleEdit}/>}
         </div>
     )
 }
 
-function NoteEditor({ paragraphs }){
+function NoteEditor({ paragraphs, handleEdit }){
     const [value, setValue] = useState('');
     const [areaHeight, setAreaHeight] = useState(0);
 
@@ -59,8 +77,11 @@ function NoteEditor({ paragraphs }){
     }
 
     function handleChange(event) {
-        setValue(event.target.value);
-        setAreaHeight(calcTextAreaHeight(event.target.value));
+        let text = event.target.value;
+
+        setValue(text);
+        setAreaHeight(calcTextAreaHeight(text));
+        handleEdit(text);
     }
 
     return(
