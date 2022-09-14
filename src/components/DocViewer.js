@@ -24,7 +24,7 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited}){
     return (
         <>
             <div>
-                <button onClick={handleClose}>Close Doc</button>
+                <button onClick={handleClose}>{changed ? 'Save and ' : ''}Close Doc</button>
                 <button onClick={() => setEditing(!editing)}>Edit Doc</button>
             </div>
             <Note doc={currentDoc} editing={editing} docChange={handleDocChange}/>
