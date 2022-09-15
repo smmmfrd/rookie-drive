@@ -26,27 +26,37 @@ async function setFieldData(docName, docValue){
 }
 
 export default function App() {
-  const currentDocName = useRef('');
+  // const currentDocName = useRef('');
+  const [currentDocName, setCurrentDocName] = useState('');
   const [currentDoc, setCurrentDoc] = useState({});
   const [docNames, setDocNames] = useState([]);
 
+  const newDocModal = useRef();
+
   useEffect(() => {
-    getLandingDocs().then(res => setDocNames(Object.keys(res).map(docName => docName)));
+    updateDocNames();
   }, []);
 
+  async function updateDocNames(){
+    getLandingDocs().then(res => setDocNames(Object.keys(res)
+      .sort()
+      .map(docName => docName)
+    ));
+  }
+
   function docSelected(docName){
-    currentDocName.current = docName;
+    setCurrentDocName(docName);
     getFieldData(docName).then(res => setCurrentDoc(res));
   }
 
   function closeCurrentDoc(){
     console.log('closing doc.')
-    currentDocName.current = '';
+    setCurrentDocName('');
     setCurrentDoc({});
   }
 
   function currentDocEdited(newDoc){
-    setFieldData(currentDocName.current, newDoc)
+    setFieldData(currentDocName, newDoc)
       .then(closeCurrentDoc());
   }
 
@@ -57,9 +67,37 @@ export default function App() {
     </div>
   ));
 
+  function openNewDoc(){
+    newDocModal.current.showModal();
+  }
+
+  function closeNewDoc(){
+    newDocModal.current.close();
+  }
+
+  async function addNewDoc(event){
+    event.preventDefault();
+    await setFieldData(currentDocName, { type: 'note' });
+    await updateDocNames();
+    closeNewDoc();
+  }
+
   return (
     <>
-      <Navbar />
+      <Navbar newFile={openNewDoc} />
+      <dialog ref={newDocModal}>
+        <form onSubmit={addNewDoc}>
+          <button onClick={closeNewDoc}>x</button>
+          <label>
+            Title:
+            <input type='text' 
+              value={currentDocName}
+              onChange={(event) => setCurrentDocName(event.target.value)}
+            />
+          </label>
+          <button type="submit">Add Doc</button>
+        </form>
+      </dialog>
       {currentDoc.type !== undefined ? 
         <DocViewer currentDoc={currentDoc} closeCurrentDoc={closeCurrentDoc} docEdited={currentDocEdited}/>
       : (<div className="doc-display">{docElements}</div>)}
