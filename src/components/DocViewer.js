@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function DocViewer({closeCurrentDoc, currentDoc, docEdited}){
+export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, deleteDoc}){
     const [changed, setChanged] = useState(false);
     const [editing, setEditing] = useState(false);
 
@@ -26,6 +26,7 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited}){
             <div>
                 <button onClick={handleClose}>{changed ? 'Save and ' : ''}Close Doc</button>
                 <button onClick={() => setEditing(!editing)}>Edit Doc</button>
+                <button onClick={deleteDoc}>Delete Doc</button>
             </div>
             <Note doc={currentDoc} editing={editing} docChange={handleDocChange}/>
         </>

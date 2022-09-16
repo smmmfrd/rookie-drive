@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { firestore } from "./firebase";
+import { updateDoc, deleteField } from "firebase/firestore";
 
 import Navbar from "./components/Navbar";
 import DocViewer from "./components/DocViewer";
@@ -23,6 +24,13 @@ async function setFieldData(docName, docValue){
   let change = {};
   change[docName] = docValue;
   await firestore.collection('landing').doc('example').update(change);
+}
+
+async function deleteDoc(docName){
+  const docRef = firestore.collection('landing').doc('example');
+  await updateDoc(docRef, {
+    [docName]: deleteField()
+  });
 }
 
 export default function App() {
@@ -50,12 +58,11 @@ export default function App() {
   }
 
   function closeCurrentDoc(){
-    console.log('closing doc.')
     setCurrentDocName('');
     setCurrentDoc({});
   }
 
-  function currentDocEdited(newDoc){
+  function editCurrentDoc(newDoc){
     setFieldData(currentDocName, newDoc)
       .then(closeCurrentDoc());
   }
@@ -82,6 +89,12 @@ export default function App() {
     closeNewDoc();
   }
 
+  async function deleteCurrentDoc(){
+    await deleteDoc(currentDocName);
+    await updateDocNames();
+    closeCurrentDoc();
+  }
+
   return (
     <>
       <Navbar newFile={openNewDoc} />
@@ -99,7 +112,12 @@ export default function App() {
         </form>
       </dialog>
       {currentDoc.type !== undefined ? 
-        <DocViewer currentDoc={currentDoc} closeCurrentDoc={closeCurrentDoc} docEdited={currentDocEdited}/>
+        <DocViewer 
+          currentDoc={currentDoc}
+          closeCurrentDoc={closeCurrentDoc}
+          docEdited={editCurrentDoc}
+          deleteDoc={deleteCurrentDoc}
+        />
       : (<div className="doc-display">{docElements}</div>)}
     </>
   );
