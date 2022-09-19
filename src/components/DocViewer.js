@@ -138,10 +138,42 @@ function NoteEditor({ paragraphs, handleEdit }){
 }
 
 function Todo({doc, editing, docChange}){
-    console.log('todo displayed');
+    const [todos, setTodos]  = useState([])
+
+    function buildTodos(d = doc){
+        setTodos(Object.keys(d)
+            .sort()
+            .reduce((arr, key) => {
+                if(key !== 'type'){
+                    return [...arr, d[key]]
+                } else {
+                    return arr;
+                }
+            },[])
+        );
+    }
+
+    useEffect(() => {
+        buildTodos();
+    }, [])
+
+    const todoElements = todos.map((t, index) => (
+        <div key={index} className="todo-container">
+            <input type='checkbox'
+                checked={t.done}
+                onChange={(e) => handleCheckbox(e, t.todo)}
+            />
+            {t.todo}
+        </div>
+    ));
+
+    function handleCheckbox(event, value){
+        console.log(event.target.checked, value);
+    }
+
     return(
         <div className="doc-editor">
-
+            {todoElements}
         </div>
     )
 }
