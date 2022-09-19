@@ -21,6 +21,23 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
         }
     }
 
+    const customProps = {
+        doc: currentDoc,
+        editing: editing,
+        docChange: handleDocChange
+    }
+
+    const docDisplay = () => {
+        switch(currentDoc.type){
+            case 'note': 
+                return <Note {...customProps}/>;
+            case 'todo': 
+                return <Todo {...customProps}/>;
+            default:
+                return null;
+        }
+    }
+
     return (
         <>
             <div>
@@ -28,7 +45,7 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
                 <button onClick={() => setEditing(!editing)}>Edit Doc</button>
                 <button onClick={deleteDoc}>Delete Doc</button>
             </div>
-            <Note doc={currentDoc} editing={editing} docChange={handleDocChange}/>
+            { docDisplay() }
         </>
     );
 }
@@ -116,6 +133,15 @@ function NoteEditor({ paragraphs, handleEdit }){
                 onChange={handleChange}
                 cols={40}
             />
+        </div>
+    )
+}
+
+function Todo({doc, editing, docChange}){
+    console.log('todo displayed');
+    return(
+        <div className="doc-editor">
+
         </div>
     )
 }
