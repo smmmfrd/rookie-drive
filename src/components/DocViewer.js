@@ -171,9 +171,30 @@ function Todo({doc, editing, docChange}){
         console.log(event.target.checked, value);
     }
 
+    function handleChange(event, index){
+        var newTodos = todos.map((t, i) => {
+            if(i === index){
+                return {...t, todo: event.target.value}
+            } else {
+                return t
+            }
+        });
+        setTodos(newTodos);
+    }
+
+    const editElements = todos.map((t, index) => (
+        <input key={`i${index}`} value={t.todo} onChange={(e) => handleChange(e, index)}/>
+    ))
+
     return(
         <div className="doc-editor">
             {todoElements}
+            {editing && 
+                <div>
+                    <h1>I'm here to edit!</h1>
+                    {editElements}
+                </div>
+            }
         </div>
     )
 }
