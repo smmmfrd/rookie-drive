@@ -168,10 +168,17 @@ function Todo({doc, editing, docChange}){
     ));
 
     function handleCheckbox(event, value){
-        console.log(event.target.checked, value);
+        var newTodos = todos.map((t) => {
+            if(t.todo === value){
+                return {...t, done: event.target.checked}
+            } else {
+                return t
+            }
+        });
+        setTodos(newTodos);
     }
 
-    function handleChange(event, index){
+    function handleTextChange(event, index){
         var newTodos = todos.map((t, i) => {
             if(i === index){
                 return {...t, todo: event.target.value}
@@ -183,7 +190,7 @@ function Todo({doc, editing, docChange}){
     }
 
     const editElements = todos.map((t, index) => (
-        <input key={`i${index}`} value={t.todo} onChange={(e) => handleChange(e, index)}/>
+        <input key={`i${index}`} value={t.todo} onChange={(e) => handleTextChange(e, index)}/>
     ))
 
     return(
