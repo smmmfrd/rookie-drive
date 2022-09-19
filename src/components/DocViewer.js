@@ -155,42 +155,37 @@ function Todo({doc, editing, docChange}){
 
     useEffect(() => {
         buildTodos();
-    }, [])
+    }, []);
 
     const todoElements = todos.map((t, index) => (
         <div key={index} className="todo-container">
             <input type='checkbox'
                 checked={t.done}
-                onChange={(e) => handleCheckbox(e, t.todo)}
+                onChange={(e) => handleChange(e, index)}
             />
             {t.todo}
         </div>
     ));
 
-    function handleCheckbox(event, value){
-        var newTodos = todos.map((t) => {
-            if(t.todo === value){
-                return {...t, done: event.target.checked}
-            } else {
-                return t
-            }
-        });
-        setTodos(newTodos);
-    }
+    function handleChange(event, index){
+        const change = event.target.type === 'checkbox' ? {done: event.target.checked} : {todo: event.target.value};
 
-    function handleTextChange(event, index){
         var newTodos = todos.map((t, i) => {
             if(i === index){
-                return {...t, todo: event.target.value}
+                return {...t, ...change};
             } else {
-                return t
+                return t;
             }
         });
         setTodos(newTodos);
+
+        var newDoc = {type: 'todo'};
+        newTodos.forEach((t, index) => newDoc[`t${index}`] = t)
+        docChange(newDoc);
     }
 
     const editElements = todos.map((t, index) => (
-        <input key={`i${index}`} value={t.todo} onChange={(e) => handleTextChange(e, index)}/>
+        <input key={`i${index}`} value={t.todo} onChange={(e) => handleChange(e, index)}/>
     ))
 
     return(
