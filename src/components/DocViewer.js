@@ -185,12 +185,20 @@ function Todo({doc, editing, docChange}){
     }
 
     const editElements = todos.map((t, index) => (
-        <input key={`i${index}`} value={t.todo} onChange={(e) => handleChange(e, index)}/>
+        <div key={`i${index}`}><input value={t.todo} onChange={(e) => handleChange(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
     ))
 
     function handleAdd(){
         setTodos(prev => {
             return [...prev, {done: false, todo: ""}]
+        })
+    }
+
+    function handleRemove(index){
+        setTodos(prev => {
+            return prev.filter((t, i) => {
+                return i !== index;
+            })
         })
     }
 
