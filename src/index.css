@@ -12,6 +12,12 @@ nav{
   align-items: center;
 }
 
+.new-doc--form{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
 .doc-display{
   padding: 1.5em;
   display: grid;

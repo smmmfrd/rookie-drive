@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import { firestore } from "./firebase";
 import { updateDoc, deleteField } from "firebase/firestore";
 
@@ -82,9 +82,8 @@ export default function App() {
     newDocModal.current.close();
   }
 
-  async function addNewDoc(event){
-    event.preventDefault();
-    await setFieldData(currentDocName, { type: 'note' });
+  async function addNewDoc(newDocName, newDocType){
+    await setFieldData(newDocName, { type: newDocType });
     await updateDocNames();
     closeNewDoc();
   }
@@ -98,19 +97,13 @@ export default function App() {
   return (
     <>
       <Navbar newFile={openNewDoc} />
-      <dialog ref={newDocModal}>
-        <form onSubmit={addNewDoc}>
-          <button onClick={closeNewDoc}>x</button>
-          <label>
-            Title:
-            <input type='text' 
-              value={currentDocName}
-              onChange={(event) => setCurrentDocName(event.target.value)}
-            />
-          </label>
-          <button type="submit">Add Doc</button>
-        </form>
-      </dialog>
+
+      <NewDocModal 
+        ref={newDocModal} 
+        addNewDoc={addNewDoc} 
+        closeNewDoc={closeNewDoc} 
+      />
+
       {currentDoc.type !== undefined ? 
         <DocViewer 
           currentDoc={currentDoc}
@@ -122,3 +115,45 @@ export default function App() {
     </>
   );
 }
+
+const NewDocModal = forwardRef((props, ref) => {
+  const {addNewDoc, closeNewDoc } = props;
+  const [docName, setDocName] = useState('');
+  const [docType, setDocType] = useState('note');
+
+  function handleSubmit(event){
+    event.preventDefault();
+    
+    if(docName.length === 0) {
+      return;
+    }
+
+    addNewDoc(docName, docType);
+  }
+
+  return (
+    <dialog ref={ref} className="new-doc--dialog">
+      <h1>Create New Document</h1>
+      <form onSubmit={(e) => handleSubmit(e)} className="new-doc--form">
+        <button type="button" onClick={closeNewDoc}>&times;</button>
+        <label>
+          Doc Type:
+          <select value={docType} onChange={((e) => setDocType(e.target.value))}>
+            <option value="note">Note</option>
+            <option value="todo">Todo</option>
+            {/* <option value="rand">Random List</option>
+            <option value="quiz">Quiz</option> */}
+          </select>
+        </label>
+        <label>
+          Title:
+          <input type='text' 
+            value={docName}
+            onChange={(event) => setDocName(event.target.value)}
+          />
+        </label>
+        <button type="submit">Add Doc</button>
+      </form>
+    </dialog>
+  );
+})
