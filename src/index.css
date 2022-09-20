@@ -46,8 +46,13 @@ nav{
   width: 0px;
 }
 
-.doc-editor--input{
-  /* width: 100%; */
+.doc-editor--input-container{
+  display: flex;
+  flex-direction: column;
+  padding: 0 1em;
+}
+
+.doc-editor--input[type="textarea"]{
   margin: auto;
   resize: none;
   min-height: 40px;

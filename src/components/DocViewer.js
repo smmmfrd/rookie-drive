@@ -188,13 +188,19 @@ function Todo({doc, editing, docChange}){
         <input key={`i${index}`} value={t.todo} onChange={(e) => handleChange(e, index)}/>
     ))
 
+    function handleAdd(){
+        setTodos(prev => {
+            return [...prev, {done: false, todo: ""}]
+        })
+    }
+
     return(
         <div className="doc-editor">
-            {todoElements}
+            <div className="doc-editor--display">{todoElements}</div>
             {editing && 
-                <div>
-                    <h1>I'm here to edit!</h1>
+                <div className="doc-editor--input-container">
                     {editElements}
+                    <p><button onClick={handleAdd}>Add Todo</button></p>
                 </div>
             }
         </div>
