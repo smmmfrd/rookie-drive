@@ -84,11 +84,16 @@ function RandomDraw({doc, editing, docChange}){
     })
 
     function pickRandom(){
-        setCurrent(choices[Math.floor(Math.random() * choices.length)]);
+        let currentIndex = choices.indexOf(current);
+        let randIndexes = choices.reduce((arr, cur, index) => {
+            return index !== currentIndex ? [...arr, index] : arr;
+        }, [])
+        let newIndex = randIndexes[Math.floor(Math.random() * randIndexes.length)]
+        setCurrent(choices[newIndex]);
     }
 
     const editElements = choices.map((c, index) => (
-        <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/></div>
+        <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
     ));
 
     function handleInput(event, index){
@@ -99,6 +104,14 @@ function RandomDraw({doc, editing, docChange}){
                 return t;
             }
         }));
+    }
+
+    function handleRemove(index){
+        setChoices(prev => {
+            return prev.filter((r, i) => {
+                return i !== index;
+            })
+        })
     }
 
     return (
