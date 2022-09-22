@@ -45,7 +45,8 @@ nav{
 }
 
 .doc-editor--display{
-  line-height: 1rem;
+  /* line-height: 1rem; */
+  padding: 1em;
 }
 
 /* Add a small inline block after p's to force new line on each! */

@@ -64,9 +64,7 @@ function RandomDraw({doc, editing, docChange}){
         Object.keys(d)
             .sort()
             .forEach(key => {
-                if(key === 'current'){
-                    setCurrent(d[key]);
-                } else if(key !== 'type'){
+                if(key !== 'type'){
                     newChoices.push(d[key])
                 }
             });
@@ -79,15 +77,45 @@ function RandomDraw({doc, editing, docChange}){
 
     const listElements = choices.map((c, index) => {
         return (
-            <div key={index}>
-                <p>{c}</p>
-            </div>
+            <p key={index}>
+                {c}
+            </p>
         )
     })
 
+    function pickRandom(){
+        setCurrent(choices[Math.floor(Math.random() * choices.length)]);
+    }
+
+    const editElements = choices.map((c, index) => (
+        <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/></div>
+    ));
+
+    function handleInput(event, index){
+        setChoices(choices.map((t, i) => {
+            if(i === index){
+                return event.target.value;
+            } else {
+                return t;
+            }
+        }));
+    }
+
     return (
         <div className="doc-editor">
-            <div className="doc-editor--display">{listElements}</div>
+            <div className="doc-editor--display">
+                {listElements}
+                <div>
+                    {current.length > 0 && <h1>{current}</h1>}
+                    <button onClick={pickRandom}>Pick {current.length > 0 ? "Another" : "Random" }</button>
+                </div>
+            </div>
+            {editing && 
+                <div className="doc-editor--input-container">
+                    {editElements}
+                
+                </div>
+            }
         </div>
     )
 }
