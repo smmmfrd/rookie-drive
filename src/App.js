@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, forwardRef } from "react";
 import { firestore } from "./firebase";
 import { updateDoc, deleteField } from "firebase/firestore";
 
-import Navbar from "./components/Navbar";
 import DocViewer from "./components/DocViewer";
 
 async function getLandingDocs(){
@@ -96,7 +95,15 @@ export default function App() {
 
   return (
     <>
-      <Navbar newFile={openNewDoc} />
+      <nav>
+          <h1>Rookie Drive</h1>
+          {currentDoc.type === undefined &&
+            <div>
+              <button onClick={openNewDoc}>+ New File</button>
+              <button>Sign In</button>
+            </div>
+          }
+      </nav>
 
       <NewDocModal 
         ref={newDocModal} 
