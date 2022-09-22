@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import Note from "./Note";
 import Todo from "./Todo";
@@ -36,6 +36,8 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
                 return <Note {...customProps}/>;
             case 'todo': 
                 return <Todo {...customProps}/>;
+            case 'rand': 
+                return <RandomDraw {...customProps}/>;
             default:
                 return null;
         }
@@ -51,4 +53,41 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
             { docDisplay() }
         </>
     );
+}
+
+function RandomDraw({doc, editing, docChange}){
+    const [choices, setChoices] = useState([]);
+    const [current, setCurrent] = useState('');
+
+    function buildState(d = doc){
+        let newChoices = [];
+        Object.keys(d)
+            .sort()
+            .forEach(key => {
+                if(key === 'current'){
+                    setCurrent(d[key]);
+                } else if(key !== 'type'){
+                    newChoices.push(d[key])
+                }
+            });
+        setChoices(newChoices);
+    }
+
+    useEffect(() => {
+        buildState();
+    }, []);
+
+    const listElements = choices.map((c, index) => {
+        return (
+            <div key={index}>
+                <p>{c}</p>
+            </div>
+        )
+    })
+
+    return (
+        <div className="doc-editor">
+            <div className="doc-editor--display">{listElements}</div>
+        </div>
+    )
 }
