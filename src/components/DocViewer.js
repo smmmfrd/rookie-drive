@@ -97,13 +97,18 @@ function RandomDraw({doc, editing, docChange}){
     ));
 
     function handleInput(event, index){
-        setChoices(choices.map((t, i) => {
+        var newChoices = choices.map((t, i) => {
             if(i === index){
                 return event.target.value;
             } else {
                 return t;
             }
-        }));
+        })
+        setChoices(newChoices);
+
+        var newDoc = {type: 'rand'};
+        newChoices.forEach((c, index) => newDoc[`r${index}`] = c);
+        docChange(newDoc);
     }
 
     function handleRemove(index){
@@ -112,6 +117,12 @@ function RandomDraw({doc, editing, docChange}){
                 return i !== index;
             })
         })
+    }
+
+    function handleAdd(){
+        setChoices(prev => {
+            return [...prev, ""];
+        });
     }
 
     return (
@@ -126,7 +137,7 @@ function RandomDraw({doc, editing, docChange}){
             {editing && 
                 <div className="doc-editor--input-container">
                     {editElements}
-                
+                    <p><button onClick={handleAdd}>Add Choice</button></p>
                 </div>
             }
         </div>
