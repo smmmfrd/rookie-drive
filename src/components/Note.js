@@ -75,7 +75,7 @@ function NoteEditor({ paragraphs, handleEdit }){
     }
 
     return(
-        <div>
+        <div className="doc-editor--input-container">
             <textarea
                 style={{height:`${areaHeight}px`}}
                 className="doc-editor--input"

@@ -3,21 +3,17 @@ import { useState, useEffect } from "react";
 export default function Todo({doc, editing, docChange}){
     const [todos, setTodos]  = useState([])
 
-    function buildTodos(d = doc){
-        setTodos(Object.keys(d)
+    useEffect(() => {
+        setTodos(Object.keys(doc)
             .sort()
             .reduce((arr, key) => {
                 if(key !== 'type'){
-                    return [...arr, d[key]]
+                    return [...arr, doc[key]]
                 } else {
                     return arr;
                 }
             },[])
         );
-    }
-
-    useEffect(() => {
-        buildTodos();
     }, []);
 
     const todoElements = todos.map((t, index) => (
