@@ -148,8 +148,8 @@ const NewDocModal = forwardRef((props, ref) => {
           <select value={docType} onChange={((e) => setDocType(e.target.value))}>
             <option value="note">Note</option>
             <option value="todo">Todo</option>
-            {/* <option value="rand">Random List</option>
-            <option value="quiz">Quiz</option> */}
+            <option value="rand">Random List</option>
+            {/* <option value="quiz">Quiz</option> */}
           </select>
         </label>
         <label>
