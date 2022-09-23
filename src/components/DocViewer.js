@@ -39,8 +39,6 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
                 return <Todo {...customProps}/>;
             case 'rand': 
                 return <RandomDraw {...customProps}/>;
-            case 'quiz': 
-                return <Quiz {...customProps}/>;
             default:
                 return null;
         }
@@ -56,65 +54,4 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
             { docDisplay() }
         </>
     );
-}
-
-function Quiz({doc, editing, docChange}){
-    const [questions, setQuestions] = useState([]);
-    
-    useEffect(() => {
-        setQuestions(Object.keys(doc)
-            .sort()
-            .reduce((arr, key) => {
-                if(key !== 'type'){
-                    const oldQuestion = doc[key];
-                    var newQuest = Object.keys(oldQuestion).sort().reduce((obj, key) => {
-                        if(key !== 'correct') {
-                            obj[key] = oldQuestion[key];
-                        }
-                        return obj;
-                    }, {});
-                    
-                    return [...arr, newQuest]
-                } else {
-                    return arr;
-                }
-            },[])
-        );
-    }, []);
-
-    const questonElements = questions.map((q, index) => (
-        <Question key={index} questionData={q} handleSelection={handleSelection}/>
-    ));
-
-    function handleSelection(){
-
-    }
-    
-    return (
-        <div className="doc-editor">
-            <div className="doc-editor--display">{questonElements}</div>
-        </div>
-    )
-}
-
-function Question({questionData, handleSelection}){
-    const question = questionData.question;
-    const answers = Object.keys(questionData).reduce((arr, key) => {
-        if(key !== 'question'){
-            return [...arr, questionData[key]];
-        } else {
-            return arr;
-        }
-    }, [])
-
-    const answerElements = answers.map((answer, index) => {
-        return <span className="quiz-answer--input" key={`a${index}`}>{answer}</span>
-    });
-
-    return(
-        <div>
-            <h2>{question}</h2>
-            <div className="quiz-answer--container">{answerElements}</div>
-        </div>
-    )
 }
