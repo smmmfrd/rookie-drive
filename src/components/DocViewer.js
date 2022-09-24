@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 import Note from "./Note";
 import Todo from "./Todo";
 import RandomDraw from "./RandomDraw";
+import MemeGenerator from "./MemeGenerator";
 
 export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, deleteDoc}){
     const [changed, setChanged] = useState(false);
@@ -56,47 +57,4 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
             { docDisplay() }
         </>
     );
-}
-
-function MemeGenerator({doc, editing, docChange}){
-
-    const [topText, setTopText] = useState(doc.topText);
-    const [bottomText, setBottomText] = useState(doc.bottomText);
-    const [img, setImg] = useState(doc.img);
-
-    async function GetNewImage(){
-        const res = await fetch("https://api.imgflip.com/get_memes");
-        const json = await res.json();
-        const memes = json.data.memes;
-        var randomIndex = Math.floor(Math.random() * memes.length);
-        setImg({
-            src: memes[randomIndex].url,
-            alt: memes[randomIndex].name
-        });
-    }
-
-    return(
-        <div className="doc-editor">
-            <div className="doc-editor--display">
-                <div className="meme">
-                    <img className="meme--img" src={img.src} alt={`${img.alt} meme`}/>
-                    <h3 className="meme--text top">{topText}</h3>
-                    <h3 className="meme--text bottom">{bottomText}</h3>
-                </div>
-            </div>
-            {editing && 
-                <div className="doc-editor--input-container">
-                    <label>
-                        Top Text:
-                        <input onChange={(e) => setTopText(e.target.value)} value={topText} />
-                    </label>
-                    <label>
-                        Bottom Text:
-                        <input onChange={(e) => setBottomText(e.target.value)} value={bottomText} />
-                    </label>
-                    <button onClick={GetNewImage}>Get New Image</button>
-                </div>
-            }
-        </div>
-    )
 }

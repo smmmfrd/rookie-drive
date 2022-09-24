@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, forwardRef } from "react";
 import { firestore } from "./firebase";
 import { updateDoc, deleteField } from "firebase/firestore";
 
+import { buildNewMeme } from "./components/MemeGenerator";
 import DocViewer from "./components/DocViewer";
 
 async function getLandingDocs(){
@@ -82,7 +83,13 @@ export default function App() {
   }
 
   async function addNewDoc(newDocName, newDocType){
-    await setFieldData(newDocName, { type: newDocType });
+    var newDoc = { type: newDocType }
+    if(newDocType === 'meme'){
+      newDoc = await buildNewMeme();
+      console.log('you meant meme?', newDoc);
+    }
+
+    await setFieldData(newDocName, newDoc);
     await updateDocNames();
     closeNewDoc();
   }
@@ -149,7 +156,7 @@ const NewDocModal = forwardRef((props, ref) => {
             <option value="note">Note</option>
             <option value="todo">Todo</option>
             <option value="rand">Random List</option>
-            {/* <option value="quiz">Quiz</option> */}
+            <option value="meme">Meme</option>
           </select>
         </label>
         <label>
