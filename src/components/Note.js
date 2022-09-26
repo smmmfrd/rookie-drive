@@ -1,23 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function Note({doc, editing, docChange}){
     const [paragraphs, setParagraphs] = useState([]);
 
+    const buildParagraphs = useCallback(
+        (d = doc) => {
+            setParagraphs(Object.keys(d)
+                .sort() // Need this because firestore mangles the keys
+                .reduce((arr, key) => {
+                if(key !== "type"){
+                    return [...arr, d[key]];
+                } else {
+                    return arr;
+                }
+            }, []));
+        }
+    , [doc]);
+
     useEffect(() => {
         buildParagraphs();
-    }, [])
-
-    function buildParagraphs(d = doc){
-        setParagraphs(Object.keys(d)
-            .sort() // Need this because firestore mangles the keys
-            .reduce((arr, key) => {
-            if(key !== "type"){
-                return [...arr, d[key]];
-            } else {
-                return arr;
-            }
-        }, []));
-    }
+    }, [buildParagraphs]);
 
     const paragraphElements = paragraphs.map((p, index) => (
         <p key={index}>
@@ -52,7 +54,7 @@ function NoteEditor({ paragraphs, handleEdit }){
         }, '');
         setValue(text);
         setAreaHeight(calcTextAreaHeight(text));
-    }, [])
+    }, [paragraphs])
 
     function calcTextAreaHeight(value) {
         let lines = value.split('\n');

@@ -14,7 +14,7 @@ export default function Todo({doc, editing, docChange}){
                 }
             },[])
         );
-    }, []);
+    }, [doc]);
 
     const todoElements = todos.map((t, index) => (
         <div key={index} className="todo-container">

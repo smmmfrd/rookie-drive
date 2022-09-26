@@ -1,24 +1,26 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 export default function RandomDraw({doc, editing, docChange}){
     const [choices, setChoices] = useState([]);
     const [current, setCurrent] = useState('');
 
-    function buildState(d = doc){
-        let newChoices = [];
-        Object.keys(d)
-            .sort()
-            .forEach(key => {
-                if(key !== 'type'){
-                    newChoices.push(d[key])
-                }
-            });
-        setChoices(newChoices);
-    }
+    const buildState = useCallback(
+        (d = doc) => {
+            let newChoices = [];
+            Object.keys(d)
+                .sort()
+                .forEach(key => {
+                    if(key !== 'type'){
+                        newChoices.push(d[key])
+                    }
+                });
+            setChoices(newChoices);
+        }
+    , [doc]);
 
     useEffect(() => {
         buildState();
-    }, []);
+    }, [buildState]);
 
     const listElements = choices.map((c, index) => {
         return (
