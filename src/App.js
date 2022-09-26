@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { firestore } from "./firebase";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { firestore, auth, firebase } from "./firebase";
 import { updateDoc, deleteField } from "firebase/firestore";
 
 import { buildNewMeme } from "./components/MemeGenerator";
@@ -38,6 +39,8 @@ export default function App() {
   const [currentDocName, setCurrentDocName] = useState('');
   const [currentDoc, setCurrentDoc] = useState({});
   const [docNames, setDocNames] = useState([]);
+
+  const [user] = useAuthState(auth);
 
   const newDocModal = useRef();
 
@@ -107,7 +110,7 @@ export default function App() {
           {currentDoc.type === undefined &&
             <div>
               <button onClick={openNewDoc}>+ New File</button>
-              <button>Sign In</button>
+              {user === null ? <SignIn /> : <SignOut />}
             </div>
           }
       </nav>
@@ -128,6 +131,23 @@ export default function App() {
       : (<div className="doc-display">{docElements}</div>)}
     </>
   );
+}
+
+function SignIn(){
+  const signInWithGoogle = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+  };
+
+  return (
+    <button onClick={signInWithGoogle}>Sign In</button>
+  )
+}
+
+function SignOut(){
+  return auth.currentUser && (
+    <button onClick={() => auth.signOut()}>Sign Out</button>
+  )
 }
 
 const NewDocModal = forwardRef((props, ref) => {
