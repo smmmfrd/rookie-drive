@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { firestore, auth, firebase } from "./firebase";
-import { updateDoc, deleteField } from "firebase/firestore";
+import { db, firestore, auth, firebase } from "./firebase";
+import { doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
 
 import { buildNewMeme } from "./components/MemeGenerator";
 import DocViewer from "./components/DocViewer";
@@ -13,22 +13,42 @@ async function getLandingDocs(){
   return data;
 }
 
-async function getFieldData(docName){
+async function getUserDocs(userId){
+  console.log('fetching user\'s docs');
+  const userDoc = await firestore.collection('drive').doc(userId).get();
+  let data = {};
+  if(userDoc.exists){
+    data = userDoc.data();
+  } else {
+    // 9 
+    await setDoc(doc(db, 'drive', userId), data);
+  }
+  return data;
+}
+
+async function getFieldData(id, docName){
   console.log('fetching a field from firestore');
-  const fullData = await getLandingDocs();
+  const fullData = await (id.length > 0 ? getUserDocs(id) : getLandingDocs());
   const field = fullData[docName];
   return field;
 }
 
-async function setFieldData(docName, docValue){
+async function setFieldData(id, docName, docValue){
   console.log('Changing doc');
   let change = {};
   change[docName] = docValue;
-  await firestore.collection('landing').doc('example').update(change);
+  if(id.length > 0){
+    await firestore.collection('drive').doc(id).update(change);
+  } else {
+    await firestore.collection('landing').doc('example').update(change);
+  }
 }
 
-async function deleteDoc(docName){
-  const docRef = firestore.collection('landing').doc('example');
+async function deleteDoc(id, docName){
+  console.log('deleting doc');
+  const docRef = (id.length > 0 ? firestore.collection('drive').doc(id) :
+    firestore.collection('landing').doc('example')
+  );
   await updateDoc(docRef, {
     [docName]: deleteField()
   });
@@ -41,23 +61,54 @@ export default function App() {
   const [docNames, setDocNames] = useState([]);
 
   const [user] = useAuthState(auth);
+  const [currentId, setCurrentId] = useState('');
+
+  useEffect(() => {
+    if(user !== null) {
+      console.log('signed in clicked');
+      // Signed in
+      setCurrentId(user.uid);
+      updateDocNames(user.uid);
+    } else {
+      // Display landing
+      console.log('signed out clicked');
+      setCurrentId('');
+      updateDocNames('');
+    }
+  }, [user])
 
   const newDocModal = useRef();
 
-  useEffect(() => {
-    updateDocNames();
-  }, []);
-
-  async function updateDocNames(){
-    getLandingDocs().then(res => setDocNames(Object.keys(res)
+  async function updateDocNames(uid = currentId){
+    console.log(uid.length);
+    const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs())
+    setDocNames(Object.keys(res)
       .sort()
       .map(docName => docName)
-    ));
+    );
+  }
+
+  async function addNewDoc(newDocName, newDocType){
+    var newDoc = { type: newDocType }
+    if(newDocType === 'meme'){
+      newDoc = await buildNewMeme();
+      console.log('you meant meme?', newDoc);
+    }
+
+    await setFieldData(currentId, newDocName, newDoc);
+    await updateDocNames();
+    closeNewDoc();
+  }
+
+  async function deleteCurrentDoc(){
+    await deleteDoc(currentId, currentDocName);
+    await updateDocNames();
+    closeCurrentDoc();
   }
 
   function docSelected(docName){
     setCurrentDocName(docName);
-    getFieldData(docName).then(res => setCurrentDoc(res));
+    getFieldData(currentId, docName).then(res => setCurrentDoc(res));
   }
 
   function closeCurrentDoc(){
@@ -66,7 +117,7 @@ export default function App() {
   }
 
   function editCurrentDoc(newDoc){
-    setFieldData(currentDocName, newDoc)
+    setFieldData(currentId, currentDocName, newDoc)
       .then(closeCurrentDoc());
   }
 
@@ -83,24 +134,6 @@ export default function App() {
 
   function closeNewDoc(){
     newDocModal.current.close();
-  }
-
-  async function addNewDoc(newDocName, newDocType){
-    var newDoc = { type: newDocType }
-    if(newDocType === 'meme'){
-      newDoc = await buildNewMeme();
-      console.log('you meant meme?', newDoc);
-    }
-
-    await setFieldData(newDocName, newDoc);
-    await updateDocNames();
-    closeNewDoc();
-  }
-
-  async function deleteCurrentDoc(){
-    await deleteDoc(currentDocName);
-    await updateDocNames();
-    closeCurrentDoc();
   }
 
   return (
