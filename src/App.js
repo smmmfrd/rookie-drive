@@ -1,26 +1,34 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { db, firestore, auth, firebase } from "./firebase";
-import { doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
+import { db, auth } from "./firebase";
+import { doc, getDoc, setDoc, updateDoc, deleteField } from "firebase/firestore";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { buildNewMeme } from "./components/MemeGenerator";
 import DocViewer from "./components/DocViewer";
 
 async function getLandingDocs(){
   console.log('fetching landing from firestore');
-  const landingDoc = await firestore.collection('landing').doc('example').get();
-  const data = landingDoc.data();
-  return data;
+
+  const docRef = doc(db, 'landing', 'example');
+
+  const docSnap = await getDoc(docRef);
+
+  let docsData = docSnap.data();
+  
+  return docsData;
 }
 
 async function getUserDocs(userId){
   console.log('fetching user\'s docs');
-  const userDoc = await firestore.collection('drive').doc(userId).get();
+  const userDocRef = doc(db, 'drive', userId);
+
+  const docSnap = await getDoc(userDocRef);
+
   let data = {};
-  if(userDoc.exists){
-    data = userDoc.data();
+  if(docSnap.exists()){
+    data = docSnap.data();
   } else {
-    // 9 
     await setDoc(doc(db, 'drive', userId), data);
   }
   return data;
@@ -38,17 +46,24 @@ async function setFieldData(id, docName, docValue){
   let change = {};
   change[docName] = docValue;
   if(id.length > 0){
-    await firestore.collection('drive').doc(id).update(change);
+    const docRef = doc(db, 'drive', id);
+    updateDoc(docRef, change);
   } else {
-    await firestore.collection('landing').doc('example').update(change);
+    // TODO - get rid of this once landing examples are finished
+    const docRef = doc(db, 'landing', 'example');
+    updateDoc(docRef, change);
   }
 }
 
-async function deleteDoc(id, docName){
+async function deleteFieldData(id, docName){
   console.log('deleting doc');
-  const docRef = (id.length > 0 ? firestore.collection('drive').doc(id) :
-    firestore.collection('landing').doc('example')
-  );
+  var docRef;
+  if(id.length > 0){
+    docRef = doc(db, 'drive', id);
+  } else {
+    // TODO - get rid of this once landing examples are finished
+    docRef = doc(db, 'landing', 'example');
+  }
   await updateDoc(docRef, {
     [docName]: deleteField()
   });
@@ -80,7 +95,6 @@ export default function App() {
   const newDocModal = useRef();
 
   async function updateDocNames(uid = currentId){
-    console.log(uid.length);
     const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs())
     setDocNames(Object.keys(res)
       .sort()
@@ -101,7 +115,7 @@ export default function App() {
   }
 
   async function deleteCurrentDoc(){
-    await deleteDoc(currentId, currentDocName);
+    await deleteFieldData(currentId, currentDocName);
     await updateDocNames();
     closeCurrentDoc();
   }
@@ -168,8 +182,8 @@ export default function App() {
 
 function SignIn(){
   const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider);
   };
 
   return (
