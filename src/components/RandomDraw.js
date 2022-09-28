@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import DocDisplay from "./DocDisplay";
 
 export default function RandomDraw({doc, editing, docChange}){
     const [choices, setChoices] = useState([]);
@@ -22,11 +23,21 @@ export default function RandomDraw({doc, editing, docChange}){
         buildState();
     }, [buildState]);
 
+    const pickElement = (
+        <div>
+            {current.length > 0 && <h1>{current}</h1>}
+            <button onClick={pickRandom}>Pick {current.length > 0 ? "Another" : "Random" }</button>
+        </div>
+    );
+
     const listElements = choices.map((c, index) => {
         return (
-            <p key={index}>
-                {c}
-            </p>
+            <>
+                <p key={index}>
+                    {c}
+                </p>
+                {index === choices.length - 1 && pickElement}
+            </>
         )
     })
 
@@ -41,9 +52,14 @@ export default function RandomDraw({doc, editing, docChange}){
         setCurrent(choices[newIndex]);
     }
 
-    const editElements = choices.map((c, index) => (
-        <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-    ));
+    const editElements = choices.map((c, index) => {
+        return(
+            <>
+            <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
+            {index === choices.length - 1 && <p><button onClick={handleAdd}>Add Choice</button></p>}
+            </>
+        )
+    });
 
     function handleInput(event, index){
         var newChoices = choices.map((t, i) => {
@@ -75,20 +91,10 @@ export default function RandomDraw({doc, editing, docChange}){
     }
 
     return (
-        <div className="doc-editor">
-            <div className="doc-editor--display">
-                {listElements}
-                <div>
-                    {current.length > 0 && <h1>{current}</h1>}
-                    <button onClick={pickRandom}>Pick {current.length > 0 ? "Another" : "Random" }</button>
-                </div>
-            </div>
-            {editing && 
-                <div className="doc-editor--input-container">
-                    {editElements}
-                    <p><button onClick={handleAdd}>Add Choice</button></p>
-                </div>
-            }
-        </div>
+        <DocDisplay 
+            docElement={listElements}
+            editing={editing}
+            editElements={editElements}
+        />
     )
 }

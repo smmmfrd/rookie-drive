@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DocDisplay from "./DocDisplay";
 
 export default function Todo({doc, editing, docChange}){
     const [todos, setTodos]  = useState([])
@@ -43,9 +44,14 @@ export default function Todo({doc, editing, docChange}){
         docChange(newDoc);
     }
 
-    const editElements = todos.map((t, index) => (
-        <div key={`i${index}`}><input value={t.todo} onChange={(e) => handleChange(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-    ))
+    const editElements = todos.map((t, index) => {
+        return (
+            <>
+                <div key={`i${index}`}><input value={t.todo} onChange={(e) => handleChange(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
+                {index === todos.length - 1 && <p key={'butt'}><button onClick={handleAdd}>Add Todo</button></p>}
+            </>
+        )
+    });
 
     function handleAdd(){
         setTodos(prev => {
@@ -61,15 +67,23 @@ export default function Todo({doc, editing, docChange}){
         })
     }
 
-    return(
-        <div className="doc-editor">
-            <div className="doc-editor--display">{todoElements}</div>
-            {editing && 
-                <div className="doc-editor--input-container">
-                    {editElements}
-                    <p><button onClick={handleAdd}>Add Todo</button></p>
-                </div>
-            }
-        </div>
+    return (
+        <DocDisplay 
+            docElement={todoElements}
+            editing={editing}
+            editElements={editElements}
+        />
     )
+
+    // return(
+    //     <div className="doc-editor">
+    //         <div className="doc-editor--display">{todoElements}</div>
+    //         {editing && 
+    //             <div className="doc-editor--input-container">
+    //                 {editElements}
+    //                 <p><button onClick={handleAdd}>Add Todo</button></p>
+    //             </div>
+    //         }
+    //     </div>
+    // )
 }

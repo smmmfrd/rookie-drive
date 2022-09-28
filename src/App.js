@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { db, auth } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc, deleteField } from "firebase/firestore";
@@ -70,13 +70,23 @@ async function deleteFieldData(id, docName){
 }
 
 export default function App() {
-  // const currentDocName = useRef('');
   const [currentDocName, setCurrentDocName] = useState('');
   const [currentDoc, setCurrentDoc] = useState({});
   const [docNames, setDocNames] = useState([]);
 
   const [user] = useAuthState(auth);
   const [currentId, setCurrentId] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const updateDocNames = useCallback(async (uid = currentId) => {
+    setLoading(true);
+    const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs())
+    setDocNames(Object.keys(res)
+      .sort()
+      .map(docName => docName)
+    );
+    setLoading(false);
+  }, [currentId]);
 
   useEffect(() => {
     if(user !== null) {
@@ -90,17 +100,9 @@ export default function App() {
       setCurrentId('');
       updateDocNames('');
     }
-  }, [user])
+  }, [user, updateDocNames])
 
   const newDocModal = useRef();
-
-  async function updateDocNames(uid = currentId){
-    const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs())
-    setDocNames(Object.keys(res)
-      .sort()
-      .map(docName => docName)
-    );
-  }
 
   async function addNewDoc(newDocName, newDocType){
     var newDoc = { type: newDocType }
@@ -175,7 +177,10 @@ export default function App() {
           docEdited={editCurrentDoc}
           deleteDoc={deleteCurrentDoc}
         />
-      : (<div className="doc-display">{docElements}</div>)}
+      : (
+        loading ? <h2>Loading</h2> :
+        <div className="doc-display">{docElements}</div>
+      )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import DocDisplay from "./DocDisplay";
 
 export default function Note({doc, editing, docChange}){
     const [paragraphs, setParagraphs] = useState([]);
@@ -37,10 +38,11 @@ export default function Note({doc, editing, docChange}){
     }
 
     return(
-        <div className="doc-editor">
-            <div className="doc-editor--display">{paragraphElements}</div>
-            {editing && <NoteEditor paragraphs={paragraphs} handleEdit={handleEdit}/>}
-        </div>
+        <DocDisplay 
+            docElement={paragraphElements}
+            editing={editing}
+            editElements={<NoteEditor paragraphs={paragraphs} handleEdit={handleEdit}/>}
+        />
     )
 }
 
@@ -77,14 +79,12 @@ function NoteEditor({ paragraphs, handleEdit }){
     }
 
     return(
-        <div className="doc-editor--input-container">
-            <textarea
-                style={{height:`${areaHeight}px`}}
-                className="doc-editor--input"
-                value={value}
-                onChange={handleChange}
-                cols={40}
-            />
-        </div>
+        <textarea
+            style={{height:`${areaHeight}px`}}
+            className="doc-editor--input"
+            value={value}
+            onChange={handleChange}
+            cols={40}
+        />
     )
 }

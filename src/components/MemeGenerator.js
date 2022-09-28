@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DocDisplay from "./DocDisplay";
 
 export async function buildNewMeme(){
     var newMeme = {
@@ -28,7 +29,7 @@ export default function MemeGenerator({doc, editing, docChange}){
     const [bottomText, setBottomText] = useState(doc.bottomText);
     const [img, setImg] = useState(doc.img);
 
-    async function GetNewImage(){
+    async function getNewImage(){
         const newImg = await getMemeImg();
 
         docEdited(newImg, 'img');
@@ -57,29 +58,38 @@ export default function MemeGenerator({doc, editing, docChange}){
     }
 
     return(
-        <div className="doc-editor">
-            <div className="doc-editor--display">
-                <div className="meme">
-                    <img className="meme--img" src={img.src} alt={`${img.alt} meme`}/>
-                    <h3 className="meme--text top">{topText}</h3>
-                    <h3 className="meme--text bottom">{bottomText}</h3>
-                </div>
-            </div>
-            {editing && 
-                <div className="doc-editor--input-container">
-                    <label>
-                        Top Text:
-                        <input onChange={(e) => docEdited(e.target.value, 'top')}
-                        value={topText} />
-                    </label>
-                    <label>
-                        Bottom Text:
-                        <input onChange={(e) => docEdited(e.target.value, 'bottom')}
-                        value={bottomText} />
-                    </label>
-                    <button onClick={GetNewImage}>Get New Image</button>
-                </div>
-            }
+        <DocDisplay
+            docElement={<MemeDisplay img={img} topText={topText} bottomText={bottomText} />}
+            editing={editing}
+            editElements={<MemeEditor topText={topText} bottomText={bottomText} docEdited={docEdited} getNewImage={getNewImage}/>}
+        />
+    )
+}
+
+function MemeDisplay({img, topText, bottomText}){
+    return(
+        <div className="meme">
+            <img className="meme--img" src={img.src} alt={`${img.alt} meme`}/>
+            <h3 className="meme--text top">{topText}</h3>
+            <h3 className="meme--text bottom">{bottomText}</h3>
+        </div>
+    )
+}
+
+function MemeEditor({docEdited, topText, bottomText, getNewImage}){
+    return(
+        <div className="doc-editor--input-container">
+            <label>
+                Top Text:
+                <input onChange={(e) => docEdited(e.target.value, 'top')}
+                value={topText} />
+            </label>
+            <label>
+                Bottom Text:
+                <input onChange={(e) => docEdited(e.target.value, 'bottom')}
+                value={bottomText} />
+            </label>
+            <button onClick={getNewImage}>Get New Image</button>
         </div>
     )
 }
