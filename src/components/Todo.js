@@ -74,16 +74,4 @@ export default function Todo({doc, editing, docChange}){
             editElements={editElements}
         />
     )
-
-    // return(
-    //     <div className="doc-editor">
-    //         <div className="doc-editor--display">{todoElements}</div>
-    //         {editing && 
-    //             <div className="doc-editor--input-container">
-    //                 {editElements}
-    //                 <p><button onClick={handleAdd}>Add Todo</button></p>
-    //             </div>
-    //         }
-    //     </div>
-    // )
 }

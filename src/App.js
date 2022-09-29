@@ -7,6 +7,8 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { buildNewMeme } from "./components/MemeGenerator";
 import DocViewer from "./components/DocViewer";
 
+const MAX_DOCS = 10;
+
 async function getLandingDocs(){
   console.log('fetching landing from firestore');
 
@@ -158,7 +160,8 @@ export default function App() {
           <h1>Rookie Drive</h1>
           {currentDoc.type === undefined &&
             <div>
-              <button onClick={openNewDoc}>+ New File</button>
+              {docNames.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New File</button> : <button disabled="true">Maximum Documents Reached</button>}
+              
               {user === null ? <SignIn /> : <SignOut />}
             </div>
           }
