@@ -65,7 +65,6 @@ function NoteEditor({ paragraphs, handleEdit }){
             return Math.floor(line.length / 40) + total;
         }, 0)
         
-        // min-height + lines x line-height + padding + border
         let newHeight = 20 + (numberOfLineBreaks + numberOfLongLines) * 20 + 2;
         return newHeight;
     }
@@ -84,6 +83,7 @@ function NoteEditor({ paragraphs, handleEdit }){
             className="doc-editor--input"
             value={value}
             onChange={handleChange}
+            maxLength="300"
             cols={40}
         />
     )

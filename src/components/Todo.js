@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import DocDisplay from "./DocDisplay";
 
+const MAX_TODOS = 15;
+
 export default function Todo({doc, editing, docChange}){
     const [todos, setTodos]  = useState([])
 
@@ -48,7 +50,7 @@ export default function Todo({doc, editing, docChange}){
         return (
             <>
                 <div key={`i${index}`}><input value={t.todo} onChange={(e) => handleChange(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-                {index === todos.length - 1 && <p key={'butt'}><button onClick={handleAdd}>Add Todo</button></p>}
+                {index === todos.length - 1 && (todos.length < MAX_TODOS ? <p key={'add-btn'}><button onClick={handleAdd}>Add Todo</button></p> : <p><button disabled="true">Max Choices Reached</button></p>)}
             </>
         )
     });

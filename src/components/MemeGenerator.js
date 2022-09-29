@@ -81,12 +81,12 @@ function MemeEditor({docEdited, topText, bottomText, getNewImage}){
         <div className="doc-editor--input-container">
             <label>
                 Top Text:
-                <input onChange={(e) => docEdited(e.target.value, 'top')}
+                <input maxLength="30" onChange={(e) => docEdited(e.target.value, 'top')}
                 value={topText} />
             </label>
             <label>
                 Bottom Text:
-                <input onChange={(e) => docEdited(e.target.value, 'bottom')}
+                <input maxLength="30" onChange={(e) => docEdited(e.target.value, 'bottom')}
                 value={bottomText} />
             </label>
             <button onClick={getNewImage}>Get New Image</button>

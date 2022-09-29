@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
 import DocDisplay from "./DocDisplay";
 
+const MAX_CHOICES = 10;
+
 export default function RandomDraw({doc, editing, docChange}){
     const [choices, setChoices] = useState([]);
     const [current, setCurrent] = useState('');
@@ -55,8 +57,8 @@ export default function RandomDraw({doc, editing, docChange}){
     const editElements = choices.map((c, index) => {
         return(
             <>
-            <div key={`r${index}`}><input value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-            {index === choices.length - 1 && <p><button onClick={handleAdd}>Add Choice</button></p>}
+            <div key={`r${index}`}><input maxLength="30" value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
+            {index === choices.length - 1 && (choices.length < MAX_CHOICES ? <p><button onClick={handleAdd}>Add Choice</button></p> : <p><button disabled="true">Max Choices Reached</button></p>)}
             </>
         )
     });
