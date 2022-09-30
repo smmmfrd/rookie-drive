@@ -1,19 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;700&display=swap');
 * {
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
+  color: #1d1f22;
+}
+
+:root {
+  --border-color: rgb(179, 183, 190);
+}
+
+body {
+  background-color: white;
+}
+
+/* NAV */
+
+h1 {
+  font-size: 2.25rem;
 }
 
 nav{
-  border-bottom: 1px solid black;
-  padding: 1em 2em;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.5em 2em;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+.nav--btn-holder {
+  display: flex;
+  gap: 0.75em;
+}
+
+.nav--btn-holder > button {
+  font-size: 1.25rem;
+  color: rgb(29, 29, 29);
+  border: none;
+  background-color: #fff;
+  box-shadow: var(--dt-surface1-shadow,0 1px 2px 0 rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15));
+  border-radius: 6.25em;
+  padding: 0.75rem;
+}
+
+/* DOC Display */
+
+.doc-display{
+  padding: 1.5em;
+  display: grid;
+  gap: 1.5em;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.doc-shortcut{
+  padding: 0.5em;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25em;
+}
+
+/* NEW DOC MODAL */
 
 .new-doc--form{
   display: flex;
@@ -21,18 +67,7 @@ nav{
   gap: 0.5em;
 }
 
-.doc-display{
-  padding: 1.5em;
-  display: grid;
-  gap: 1.5em;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-}
-
-.doc-shortcut{
-  padding: 0.5em;
-  border: 1px solid black;
-  border-radius: 0.25em;
-}
+/* DOC EDITOR */
 
 .doc-editor{
   display: flex;
@@ -44,11 +79,9 @@ nav{
 }
 
 .doc-editor--display{
-  /* line-height: 1rem; */
   padding: 1em;
 }
 
-/* Add a small inline block after p's to force new line on each! */
 .doc-editor--display > p:after{
   content: "";
   display: inline-block;
@@ -82,7 +115,7 @@ nav{
   margin: auto;
 }
 
-/* From scrimba */
+/* From scrimba project */
 .meme--text {
   position: absolute;
   width: 80%;

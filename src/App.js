@@ -156,34 +156,38 @@ export default function App() {
 
   return (
     <>
-      <nav>
-          <h1>Rookie Drive</h1>
-          {currentDoc.type === undefined &&
-            <div>
-              {docNames.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New File</button> : <button disabled="true">Maximum Documents Reached</button>}
-              
-              {user === null ? <SignIn /> : <SignOut />}
-            </div>
-          }
-      </nav>
+      <header>
+        <nav>
+            <h1>Rookie Drive</h1>
+            {currentDoc.type === undefined &&
+              <div className="nav--btn-holder">
+                {docNames.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New</button> : <button disabled="true">Maximum Documents Reached</button>}
+        
+                {user === null ? <SignIn /> : <SignOut />}
+              </div>
+            }
+        </nav>
+      </header>
 
-      <NewDocModal 
-        ref={newDocModal} 
-        addNewDoc={addNewDoc} 
-        closeNewDoc={closeNewDoc} 
-      />
-
-      {currentDoc.type !== undefined ? 
-        <DocViewer 
-          currentDoc={currentDoc}
-          closeCurrentDoc={closeCurrentDoc}
-          docEdited={editCurrentDoc}
-          deleteDoc={deleteCurrentDoc}
+      <main>
+        <NewDocModal
+          ref={newDocModal}
+          addNewDoc={addNewDoc}
+          closeNewDoc={closeNewDoc}
         />
-      : (
-        loading ? <h2>Loading</h2> :
-        <div className="doc-display">{docElements}</div>
-      )}
+        {currentDoc.type !== undefined ?
+          <DocViewer
+            currentDoc={currentDoc}
+            closeCurrentDoc={closeCurrentDoc}
+            docEdited={editCurrentDoc}
+            deleteDoc={deleteCurrentDoc}
+          />
+        : (
+          loading ? <h2>Loading</h2> :
+          <div className="doc-display">{docElements}</div>
+        )}
+        
+      </main>
     </>
   );
 }
@@ -239,6 +243,7 @@ const NewDocModal = forwardRef((props, ref) => {
           <input type='text' 
             value={docName}
             onChange={(event) => setDocName(event.target.value)}
+            maxLength="25"
           />
         </label>
         <button type="submit">Add Doc</button>
