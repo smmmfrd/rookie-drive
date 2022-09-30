@@ -7,6 +7,12 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { buildNewMeme } from "./components/MemeGenerator";
 import DocViewer from "./components/DocViewer";
 
+import headerIcon from "./assets/image-filter-drama.svg"
+import noteIcon from "./assets/note.svg"
+import todoListIcon from "./assets/list-status.svg"
+import randomListIcon from "./assets/format-list-bulleted-square.svg"
+import memeIcon from "./assets/file-jpg-box.svg"
+
 const MAX_DOCS = 10;
 
 async function getLandingDocs(){
@@ -139,10 +145,25 @@ export default function App() {
       .then(closeCurrentDoc());
   }
 
+  function getIcon(type) {
+    switch(currentDoc.type){
+      case 'note': 
+          return noteIcon;
+      case 'todo': 
+          return todoListIcon;
+      case 'rand': 
+          return randomListIcon;
+      case 'meme': 
+          return memeIcon;
+      default:
+          return null;
+  }
+  }
+
   const docElements = docNames.map(docName => (
-    <div key={docName} className="doc-shortcut"
-      onClick={() => docSelected(docName)}>
-      <h2>{docName}</h2>
+    <div key={docName} className="doc-shortcut" onClick={() => docSelected(docName)}>
+      {/* TODO - get doc type in here! */}
+      <p>{docName}</p>
     </div>
   ));
 
@@ -158,7 +179,10 @@ export default function App() {
     <>
       <header>
         <nav>
-            <h1>Rookie Drive</h1>
+            <div className="title-container">
+              <img className="title-icon" src={headerIcon} alt="Logo"/>
+              <h1>Rookie Drive</h1>
+            </div>
             {currentDoc.type === undefined &&
               <div className="nav--btn-holder">
                 {docNames.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New</button> : <button disabled="true">Maximum Documents Reached</button>}

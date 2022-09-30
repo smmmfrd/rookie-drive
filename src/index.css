@@ -20,6 +20,17 @@ h1 {
   font-size: 2.25rem;
 }
 
+.title-icon {
+  width: 45px;
+  height: 45px;
+}
+
+.title-container{
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
 nav{
   border-bottom: 1px solid var(--border-color);
   padding: 0.5em 2em;
@@ -54,7 +65,8 @@ nav{
 }
 
 .doc-shortcut{
-  padding: 0.5em;
+  padding: 0.5em 1em;
+  font-size: 1.125rem;
   border: 1px solid var(--border-color);
   border-radius: 0.25em;
 }
