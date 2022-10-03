@@ -80,7 +80,7 @@ async function deleteFieldData(id, docName){
 export default function App() {
   const [currentDocName, setCurrentDocName] = useState('');
   const [currentDoc, setCurrentDoc] = useState({});
-  const [docNames, setDocNames] = useState([]);
+  const [docData, setDocData] = useState([]);
 
   const [user] = useAuthState(auth);
   const [currentId, setCurrentId] = useState('');
@@ -88,10 +88,16 @@ export default function App() {
 
   const updateDocNames = useCallback(async (uid = currentId) => {
     setLoading(true);
-    const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs())
-    setDocNames(Object.keys(res)
+    const res = await (uid.length > 0 ? getUserDocs(uid) : getLandingDocs());
+
+    setDocData(Object.keys(res)
       .sort()
-      .map(docName => docName)
+      .map(docName => {
+        return {
+          name: docName,
+          type: res[docName].type
+        }
+      })
     );
     setLoading(false);
   }, [currentId]);
@@ -146,26 +152,29 @@ export default function App() {
   }
 
   function getIcon(type) {
-    switch(currentDoc.type){
+    switch(type){
       case 'note': 
-          return noteIcon;
+          return {img: noteIcon, alt: 'note icon'};
       case 'todo': 
-          return todoListIcon;
+          return {img: todoListIcon, alt: 'todo list icon'};
       case 'rand': 
-          return randomListIcon;
+          return {img: randomListIcon, alt: 'random list icon'};
       case 'meme': 
-          return memeIcon;
+          return {img: memeIcon, alt: 'meme icon'};
       default:
           return null;
-  }
+    }
   }
 
-  const docElements = docNames.map(docName => (
-    <div key={docName} className="doc-shortcut" onClick={() => docSelected(docName)}>
-      {/* TODO - get doc type in here! */}
-      <p>{docName}</p>
-    </div>
-  ));
+  const docElements = docData.map(doc => {
+    const icon = getIcon(doc.type);
+    return (
+      <div key={doc.name} className="doc-shortcut" onClick={() => docSelected(doc.name)}>
+        <img className="doc-shortcut--icon" src={icon.img} alt={icon.alt}/>
+        <p className="doc-shortcut--text">{doc.name}</p>
+      </div>
+    )
+  });
 
   function openNewDoc(){
     newDocModal.current.showModal();
@@ -185,7 +194,7 @@ export default function App() {
             </div>
             {currentDoc.type === undefined &&
               <div className="nav--btn-holder">
-                {docNames.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New</button> : <button disabled="true">Maximum Documents Reached</button>}
+                {docData.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New</button> : <button disabled="true">Maximum Documents Reached</button>}
         
                 {user === null ? <SignIn /> : <SignOut />}
               </div>

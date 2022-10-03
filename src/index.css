@@ -65,10 +65,21 @@ nav{
 }
 
 .doc-shortcut{
-  padding: 0.5em 1em;
+  min-height: 50px;
+  padding: 0.5em;
   font-size: 1.125rem;
+
   border: 1px solid var(--border-color);
   border-radius: 0.25em;
+
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.doc-shortcut--icon{
+  width: 40px;
+  height: 40px;
 }
 
 /* NEW DOC MODAL */
