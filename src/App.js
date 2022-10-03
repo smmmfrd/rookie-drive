@@ -259,11 +259,13 @@ const NewDocModal = forwardRef((props, ref) => {
 
   return (
     <dialog ref={ref} className="new-doc--dialog">
-      <h1>Create New Document</h1>
+      <header>
+        <h2>Create New Doc</h2>
+        <button className="new-doc--close-btn" type="button" onClick={closeNewDoc}>&times;</button>
+      </header>
       <form onSubmit={(e) => handleSubmit(e)} className="new-doc--form">
-        <button type="button" onClick={closeNewDoc}>&times;</button>
         <label>
-          Doc Type:
+          <span className="new-doc--form-label">Type:</span>
           <select value={docType} onChange={((e) => setDocType(e.target.value))}>
             <option value="note">Note</option>
             <option value="todo">Todo</option>
@@ -272,14 +274,14 @@ const NewDocModal = forwardRef((props, ref) => {
           </select>
         </label>
         <label>
-          Title:
+          <span className="new-doc--form-label">Title:</span>
           <input type='text' 
             value={docName}
             onChange={(event) => setDocName(event.target.value)}
             maxLength="25"
           />
         </label>
-        <button type="submit">Add Doc</button>
+        <button type="submit">+ Add Doc</button>
       </form>
     </dialog>
   );

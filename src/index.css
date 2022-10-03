@@ -78,16 +78,79 @@ nav{
 }
 
 .doc-shortcut--icon{
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
 }
 
 /* NEW DOC MODAL */
 
+.new-doc--dialog{
+  margin-left: auto;
+  top: 20px;
+  right: 25px;
+  width: 275px;
+
+  border: none;
+  border-radius: 1em;
+  padding: 0.25em 1em 0.5em;
+  box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.34);
+}
+
+.new-doc--dialog::backdrop {
+  background-color: rgb(0, 0, 0, 0.25);
+}
+
+.new-doc--dialog > header > h2{
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+.new-doc--close-btn {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+
+  width: 30px;
+  height: 30px;
+  font-size: 1.25rem;
+  border: none;
+  border-radius: 50%;
+
+  background-color: rgb(58, 58, 58);
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .new-doc--form{
+  margin-top: 0.5em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+}
+
+.new-doc--form-label{
+  display: inline-block;
+  width: 50px;
+}
+
+.new-doc--form select, 
+.new-doc--form input{
+  font-size: 1.1rem;
+  width: calc(100% - 50px);
+}
+
+.new-doc--form > button[type="submit"]{
+  width: 40%;
+  margin: 0 auto;
+  font-size: 1rem;
+  background-color: rgb(58, 58, 58);
+  color: white;
+  padding: 0.25em;
+  border: none;
+  border-radius: 0.5em;
 }
 
 /* DOC EDITOR */
