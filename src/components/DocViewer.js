@@ -51,9 +51,11 @@ export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, delet
 
     return (
         <>
-            <div>
+            <div className="doc-display--button-container">
                 <button onClick={handleClose}>{changed ? 'Save and ' : ''}Close Doc</button>
-                <button onClick={() => setEditing(!editing)}>{editing ? "Close Editor" : "Edit Doc"}</button>
+                <button onClick={() => setEditing(!editing)} className={editing ? "close-btn" : ""}>
+                    {editing ? "Close Editor" : "Edit Doc"}
+                </button>
                 <button onClick={deleteDoc}>Delete Doc</button>
             </div>
             { docDisplay() }
