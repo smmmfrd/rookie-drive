@@ -85,9 +85,8 @@ nav{
 /* NEW DOC MODAL */
 
 .new-doc--dialog{
-  margin-left: auto;
-  top: 20px;
-  right: 25px;
+  margin: 0 auto;
+  top: 30px;
   width: 275px;
 
   border: none;
@@ -107,8 +106,8 @@ nav{
 
 .new-doc--close-btn {
   position: fixed;
-  top: 8px;
-  right: 8px;
+  top: 16px;
+  right: calc(50% - 155px);
 
   width: 30px;
   height: 30px;

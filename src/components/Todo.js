@@ -4,7 +4,7 @@ import DocDisplay from "./DocDisplay";
 const MAX_TODOS = 15;
 
 export default function Todo({doc, editing, docChange}){
-    const [todos, setTodos]  = useState([])
+    const [todos, setTodos]  = useState([]);
 
     useEffect(() => {
         setTodos(Object.keys(doc)
@@ -42,18 +42,29 @@ export default function Todo({doc, editing, docChange}){
         setTodos(newTodos);
 
         var newDoc = {type: 'todo'};
-        newTodos.forEach((t, index) => newDoc[`t${index}`] = t)
+        newTodos.forEach((todo, index) => {
+                newDoc[`t${index}`] = todo;
+        });
         docChange(newDoc);
     }
 
-    const editElements = todos.map((t, index) => {
-        return (
-            <>
-                <div key={`i${index}`}><input value={t.todo} onChange={(e) => handleChange(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-                {index === todos.length - 1 && (todos.length < MAX_TODOS ? <p key={'add-btn'}><button onClick={handleAdd}>Add Todo</button></p> : <p><button disabled="true">Max Choices Reached</button></p>)}
-            </>
-        )
-    });
+    const editElements = () => {
+        var elements = todos.map((t, index) => {
+            return (
+                <div key={`i${index}`}>
+                    <input maxLength="30" value={t.todo} onChange={(e) => handleChange(e, index)}/>
+                    <button onClick={() => handleRemove(index)}>&times;</button>
+                </div>
+            )
+        });
+
+        elements.push(todos.length < MAX_TODOS ? 
+            <p key={'add-btn'}><button onClick={handleAdd}>Add Todo</button></p> :
+            <p><button disabled="true">Max Choices Reached</button></p>
+        );
+
+        return elements;
+    }
 
     function handleAdd(){
         setTodos(prev => {
@@ -73,7 +84,7 @@ export default function Todo({doc, editing, docChange}){
         <DocDisplay 
             docElement={todoElements}
             editing={editing}
-            editElements={editElements}
+            editElements={editElements()}
         />
     )
 }

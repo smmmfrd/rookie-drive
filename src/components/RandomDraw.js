@@ -54,14 +54,23 @@ export default function RandomDraw({doc, editing, docChange}){
         setCurrent(choices[newIndex]);
     }
 
-    const editElements = choices.map((c, index) => {
-        return(
-            <>
-            <div key={`r${index}`}><input maxLength="30" value={c} onChange={(e) => handleInput(e, index)}/><button onClick={() => handleRemove(index)}>&times;</button></div>
-            {index === choices.length - 1 && (choices.length < MAX_CHOICES ? <p><button onClick={handleAdd}>Add Choice</button></p> : <p><button disabled="true">Max Choices Reached</button></p>)}
-            </>
-        )
-    });
+    const editElements = () => {
+        var elements = choices.map((c, index) => {
+            return(
+                <div key={`r${index}`}>
+                    <input maxLength="30" value={c} onChange={(e) => handleInput(e, index)}/>
+                    <button onClick={() => handleRemove(index)}>&times;</button>
+                </div>
+            )
+        });
+
+        elements.push(choices.length < MAX_CHOICES ? 
+            <p><button onClick={handleAdd}>Add Choice</button></p> :
+            <p><button disabled="true">Max Choices Reached</button></p>
+        );
+
+        return elements;
+    };
 
     function handleInput(event, index){
         var newChoices = choices.map((t, i) => {
@@ -74,7 +83,11 @@ export default function RandomDraw({doc, editing, docChange}){
         setChoices(newChoices);
 
         var newDoc = {type: 'rand'};
-        newChoices.forEach((c, index) => newDoc[`r${index}`] = c);
+        newChoices.forEach((choice, index) => {
+            if(choice.length > 0){
+                newDoc[`r${index}`] = choice;
+            }
+        });
         docChange(newDoc);
     }
 
@@ -96,7 +109,7 @@ export default function RandomDraw({doc, editing, docChange}){
         <DocDisplay 
             docElement={listElements}
             editing={editing}
-            editElements={editElements}
+            editElements={editElements()}
         />
     )
 }
