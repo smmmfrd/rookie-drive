@@ -5,6 +5,8 @@ import Todo from "./Todo";
 import RandomDraw from "./RandomDraw";
 import MemeGenerator from "./MemeGenerator";
 
+import "./docs.css";
+
 export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, deleteDoc}){
     const [changed, setChanged] = useState(false);
     const [editing, setEditing] = useState(false);
