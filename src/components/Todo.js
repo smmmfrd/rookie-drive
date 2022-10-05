@@ -59,8 +59,8 @@ export default function Todo({doc, editing, docChange}){
         });
 
         elements.push(todos.length < MAX_TODOS ? 
-            <p key={'add-btn'}><button onClick={handleAdd}>Add Todo</button></p> :
-            <p><button disabled="true">Max Choices Reached</button></p>
+            <p key={'add-btn'}><button className="add-btn" onClick={handleAdd}>Add Todo</button></p> :
+            <p><button className="add-btn" disabled="true">Max Choices Reached</button></p>
         );
 
         return elements;

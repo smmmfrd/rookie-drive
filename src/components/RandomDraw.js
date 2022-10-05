@@ -28,14 +28,14 @@ export default function RandomDraw({doc, editing, docChange}){
     const pickElement = (
         <div>
             {current.length > 0 && <h1>{current}</h1>}
-            <button onClick={pickRandom}>Pick {current.length > 0 ? "Another" : "Random" }</button>
+            <button className="random-btn" onClick={pickRandom}>Pick {current.length > 0 ? "Another" : "Random" }</button>
         </div>
     );
 
     const listElements = choices.map((c, index) => {
         return (
             <>
-                <p key={index}>
+                <p className="random-choice" key={index}>
                     {c}
                 </p>
                 {index === choices.length - 1 && pickElement}
@@ -48,7 +48,7 @@ export default function RandomDraw({doc, editing, docChange}){
 
         let currentIndex = choices.indexOf(current);
         let randIndexes = choices.reduce((arr, cur, index) => {
-            return index !== currentIndex ? [...arr, index] : arr;
+            return (index !== currentIndex && cur.length > 0) ? [...arr, index] : arr;
         }, [])
         let newIndex = randIndexes[Math.floor(Math.random() * randIndexes.length)]
         setCurrent(choices[newIndex]);
@@ -57,16 +57,16 @@ export default function RandomDraw({doc, editing, docChange}){
     const editElements = () => {
         var elements = choices.map((c, index) => {
             return(
-                <div key={`r${index}`}>
+                <div className="list-input" key={`r${index}`}>
                     <input maxLength="30" value={c} onChange={(e) => handleInput(e, index)}/>
-                    <button onClick={() => handleRemove(index)}>&times;</button>
+                    <button className="delete-btn" onClick={() => handleRemove(index)}>&times;</button>
                 </div>
             )
         });
 
         elements.push(choices.length < MAX_CHOICES ? 
-            <p><button onClick={handleAdd}>Add Choice</button></p> :
-            <p><button disabled="true">Max Choices Reached</button></p>
+            <p><button className="add-btn" onClick={handleAdd}>Add Choice</button></p> :
+            <p><button className="add-btn" disabled="true">Max Choices Reached</button></p>
         );
 
         return elements;
