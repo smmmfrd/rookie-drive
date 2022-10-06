@@ -37,8 +37,9 @@
 .doc-editor--input-container {
     display: flex;
     flex-direction: column;
+    gap: 2px;
     padding: 1em;
-    background-color: #e6eaf0;
+    background-color: #f5f6fa;
     margin-right: 1em;
 }
 
@@ -48,10 +49,27 @@ button[class="close-btn"] {
     border: 1px solid #e84118;
 }
 
+@media (max-width: 875px) {
+    .doc-editor {
+        grid-template-columns: 1fr;
+    }
+}
+
+input {
+    background-color: #2f3640;
+    color: #f5f6fa;
+    border: 2px solid #2f3640;
+    border-radius: 4px;
+}
+
 /* NOTE */
 
 textarea {
     margin: -2px auto 0;
+    background-color: #2f3640;
+    color: #f5f6fa;
+    border: 2px solid #2f3640;
+    border-radius: 4px;
     font-size: 1rem;
     resize: none;
     min-height: 40px;
@@ -62,7 +80,7 @@ textarea {
 /* TODO */
 
 .todo-container {
-    height: 22px;
+    height: 24px;
 }
 
 .todo-container > input {
@@ -70,7 +88,7 @@ textarea {
 }
 
 .list-input{
-    height: 1.5em;
+    height: 22px;
 }
 
 .delete-btn {
@@ -108,10 +126,10 @@ textarea {
 /* RANDOM CHOICE */
 
 .random-choice {
-    height: 1.5em;
+    height: 24px;
 }
 
-.random-btn{
+.random-btn {
     float: left;
     margin-left: 1em;
     background-color: #00a8ff;
@@ -134,7 +152,32 @@ textarea {
     margin: auto;
 }
 
-/* From scrimba project */
+.meme-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.meme-input {
+    margin-bottom: 1em;
+}
+
+.meme-new-btn {
+    color: #192a56;
+    border: 1px solid #192a56;
+    border-radius: 4px;
+    background-color: #f5f6fa;
+    font-size: 1.5rem;
+    padding: 0.5em;
+}
+
+.meme-new-btn:hover {
+    color: white;
+    background: linear-gradient(90deg, #672280 1.18%, #A626D3 100%);
+}
+
+/* From scrimba meme generator project */
 .meme--text {
     position: absolute;
     width: 80%;

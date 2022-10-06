@@ -79,17 +79,19 @@ function MemeDisplay({img, topText, bottomText}){
 function MemeEditor({docEdited, topText, bottomText, getNewImage}){
     return(
         <div className="doc-editor--input-container">
-            <label>
-                Top Text:
-                <input maxLength="30" onChange={(e) => docEdited(e.target.value, 'top')}
-                value={topText} />
-            </label>
-            <label>
-                Bottom Text:
-                <input maxLength="30" onChange={(e) => docEdited(e.target.value, 'bottom')}
-                value={bottomText} />
-            </label>
-            <button onClick={getNewImage}>Get New Image</button>
+            <div className="meme-input">
+                <label>
+                    <p className="meme-label">Top Text:</p>
+                    <input className="meme-input" maxLength="30" onChange={(e) => docEdited(e.target.value, 'top')}
+                    value={topText} />
+                </label>
+                <label>
+                    <p className="meme-label">Bottom Text:</p>
+                    <input className="meme-input" maxLength="30" onChange={(e) => docEdited(e.target.value, 'bottom')}
+                    value={bottomText} />
+                </label>
+                <button className="meme-new-btn" onClick={getNewImage}>Get New Image</button>
+            </div>
         </div>
     )
 }
