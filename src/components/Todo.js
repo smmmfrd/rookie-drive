@@ -29,21 +29,32 @@ export default function Todo({doc, editing, docChange}){
         </div>
     ));
 
-    function handleChange(event, index){
-        const change = event.target.type === 'checkbox' ? {done: event.target.checked} : {todo: event.target.value};
+    function handleChange(event, index, change = 'edit'){
+        var newTodos;
 
-        var newTodos = todos.map((t, i) => {
-            if(i === index){
-                return {...t, ...change};
-            } else {
-                return t;
-            }
-        });
+        if(change === 'edit') {
+            const change = event.target.type === 'checkbox' ? {done: event.target.checked} : {todo: event.target.value};
+
+            newTodos = todos.map((t, i) => {
+                if(i === index){
+                    return {...t, ...change};
+                } else {
+                    return t;
+                }
+            });
+        } else if(change === 'delete') {
+            newTodos = todos.reduce((arr, current, i) => {
+                return i === index ? arr : [...arr, current];
+            }, []);
+        }
+
         setTodos(newTodos);
-
         var newDoc = {type: 'todo'};
-        newTodos.forEach((todo, index) => {
-                newDoc[`t${index}`] = todo;
+        
+        newTodos.forEach((item, i) => {
+            if(item.todo.length > 0) {
+                newDoc[`t${i}`] = item;
+            }
         });
         docChange(newDoc);
     }
@@ -53,7 +64,7 @@ export default function Todo({doc, editing, docChange}){
             return (
                 <div key={`i${index}`}>
                     <input maxLength="30" value={t.todo} onChange={(e) => handleChange(e, index)}/>
-                    <button onClick={() => handleRemove(index)}>&times;</button>
+                    <button className="delete-btn" onClick={(e) => handleChange(e, index, 'delete')}>&times;</button>
                 </div>
             )
         });
@@ -69,14 +80,6 @@ export default function Todo({doc, editing, docChange}){
     function handleAdd(){
         setTodos(prev => {
             return [...prev, {done: false, todo: ""}]
-        })
-    }
-
-    function handleRemove(index){
-        setTodos(prev => {
-            return prev.filter((t, i) => {
-                return i !== index;
-            })
         })
     }
 

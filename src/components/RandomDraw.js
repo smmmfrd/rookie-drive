@@ -59,7 +59,7 @@ export default function RandomDraw({doc, editing, docChange}){
             return(
                 <div className="list-input" key={`r${index}`}>
                     <input maxLength="30" value={c} onChange={(e) => handleInput(e, index)}/>
-                    <button className="delete-btn" onClick={() => handleRemove(index)}>&times;</button>
+                    <button className="delete-btn" onClick={(e) => handleInput(e, index, 'delete')}>&times;</button>
                 </div>
             )
         });
@@ -72,14 +72,22 @@ export default function RandomDraw({doc, editing, docChange}){
         return elements;
     };
 
-    function handleInput(event, index){
-        var newChoices = choices.map((t, i) => {
-            if(i === index){
-                return event.target.value;
-            } else {
-                return t;
-            }
-        })
+    function handleInput(event, index, change = 'edit'){
+        var newChoices;
+
+        if(change === 'edit') {
+            newChoices = choices.map((t, i) => {
+                if(i === index){
+                    return event.target.value;
+                } else {
+                    return t;
+                }
+            });
+        } else if (change === 'delete') {
+            newChoices = choices.reduce((arr, current, i) => {
+                return i === index ? arr : [...arr, current];
+            }, []);
+        }
         setChoices(newChoices);
 
         var newDoc = {type: 'rand'};
@@ -89,14 +97,6 @@ export default function RandomDraw({doc, editing, docChange}){
             }
         });
         docChange(newDoc);
-    }
-
-    function handleRemove(index){
-        setChoices(prev => {
-            return prev.filter((r, i) => {
-                return i !== index;
-            })
-        })
     }
 
     function handleAdd(){

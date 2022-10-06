@@ -87,6 +87,14 @@ textarea {
 
 /* TODO */
 
+.todo-container {
+    height: 22px;
+}
+
+.todo-container > input {
+    margin-right: 1em;
+}
+
 .list-input{
     height: 1.5em;
 }
@@ -100,7 +108,14 @@ textarea {
     border-radius: 2px;
 
     background-color: white;
-    color: #c23616;
+    color: #e84118;
+}
+
+.delete-btn:hover {
+    background-color: #dcdde1;
+}
+.delete-btn:active {
+    background-color: #e84118;
 }
 
 .add-btn {
@@ -123,8 +138,8 @@ textarea {
 }
 
 .random-btn{
-    float: right;
-    margin-right: 2em;
+    float: left;
+    margin-left: 1em;
     background-color: #00a8ff;
     font-size: 1.1rem;
     padding: 0.5em 0.75em;
