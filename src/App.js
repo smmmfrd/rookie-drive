@@ -194,8 +194,10 @@ export default function App() {
             </div>
             {currentDoc.type === undefined &&
               <div className="nav--btn-holder">
-                {docData.length < MAX_DOCS ? <button onClick={openNewDoc}>+ New</button> : <button disabled="true">Maximum Documents Reached</button>}
-        
+                {docData.length < MAX_DOCS ?
+                <button className="nav--btn" onClick={openNewDoc}>+ New</button> :
+                <button disabled="true">Maximum Documents Reached</button>}
+
                 {user === null ? <SignIn /> : <SignOut />}
               </div>
             }
@@ -232,13 +234,13 @@ function SignIn(){
   };
 
   return (
-    <button onClick={signInWithGoogle}>Sign In</button>
+    <button className="nav--btn" onClick={signInWithGoogle}>Sign In</button>
   )
 }
 
 function SignOut(){
   return auth.currentUser && (
-    <button onClick={() => auth.signOut()}>Sign Out</button>
+    <button className="nav--btn" onClick={() => auth.signOut()}>Sign Out</button>
   )
 }
 
@@ -281,7 +283,7 @@ const NewDocModal = forwardRef((props, ref) => {
             maxLength="25"
           />
         </label>
-        <button type="submit">+ Add Doc</button>
+        <button className="new-doc--submit-btn" type="submit">+ Add Doc</button>
       </form>
     </dialog>
   );
