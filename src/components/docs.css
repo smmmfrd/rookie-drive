@@ -56,19 +56,20 @@ button[class="close-btn"] {
 }
 
 input {
-    background-color: #2f3640;
-    color: #f5f6fa;
-    border: 2px solid #2f3640;
+    background-color: white;
+    color: #2f3640;
+    border: 1px solid #2f3640;
     border-radius: 4px;
 }
 
 /* NOTE */
 
 textarea {
+    font-family: 'Courier New', Courier, monospace;
     margin: -2px auto 0;
-    background-color: #2f3640;
-    color: #f5f6fa;
-    border: 2px solid #2f3640;
+    background-color: white;
+    color: #2f3640;
+    border: 1px solid #2f3640;
     border-radius: 4px;
     font-size: 1rem;
     resize: none;

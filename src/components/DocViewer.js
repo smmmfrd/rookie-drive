@@ -7,13 +7,18 @@ import MemeGenerator from "./MemeGenerator";
 
 import "./docs.css";
 
-export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, deleteDoc}){
+export default function DocViewer({closeCurrentDoc, currentDoc, docEdited, deleteDoc, signedIn}){
     const [changed, setChanged] = useState(false);
     const [editing, setEditing] = useState(false);
 
     const changedDoc = useRef({});
+    console.log(signedIn);
 
     function handleDocChange(newDoc){
+        if(!signedIn) {
+            return;
+        }
+        
         changedDoc.current = newDoc;
         if(!changed) {
             setChanged(true);

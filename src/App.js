@@ -216,6 +216,7 @@ export default function App() {
             closeCurrentDoc={closeCurrentDoc}
             docEdited={editCurrentDoc}
             deleteDoc={deleteCurrentDoc}
+            signedIn={!!auth.currentUser}
           />
         : (
           loading ? <h2>Loading</h2> :
