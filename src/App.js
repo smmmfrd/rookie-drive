@@ -194,9 +194,9 @@ export default function App() {
             </div>
             {currentDoc.type === undefined &&
               <div className="nav--btn-holder">
-                {docData.length < MAX_DOCS ?
+                {user != null && (docData.length < MAX_DOCS ?
                 <button className="nav--btn" onClick={openNewDoc}>+ New</button> :
-                <button disabled="true">Maximum Documents Reached</button>}
+                <button disabled="true">Maximum Documents Reached</button>)}
 
                 {user === null ? <SignIn /> : <SignOut />}
               </div>
@@ -216,7 +216,7 @@ export default function App() {
             closeCurrentDoc={closeCurrentDoc}
             docEdited={editCurrentDoc}
             deleteDoc={deleteCurrentDoc}
-            signedIn={!!auth.currentUser}
+            signedIn={user === null}
           />
         : (
           loading ? <h2>Loading</h2> :
