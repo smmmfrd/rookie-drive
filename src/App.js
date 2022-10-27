@@ -55,11 +55,7 @@ async function setFieldData(id, docName, docValue){
   change[docName] = docValue;
   if(id.length > 0){
     const docRef = doc(db, 'drive', id);
-    updateDoc(docRef, change);
-  } else {
-    // TODO - get rid of this once landing examples are finished
-    const docRef = doc(db, 'landing', 'example');
-    updateDoc(docRef, change);
+    await updateDoc(docRef, change);
   }
 }
 
@@ -122,7 +118,6 @@ export default function App() {
     var newDoc = { type: newDocType }
     if(newDocType === 'meme'){
       newDoc = await buildNewMeme();
-      console.log('you meant meme?', newDoc);
     }
 
     await setFieldData(currentId, newDocName, newDoc);
