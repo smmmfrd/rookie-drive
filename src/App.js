@@ -186,6 +186,7 @@ export default function App() {
             <div className="title-container">
               <img className="title-icon" src={headerIcon} alt="Logo"/>
               <h1>Rookie Drive</h1>
+              <p className="title-disc"><span className="copyright-symbol">&#169;</span> <a href="https://github.com/smmmfrd" target='_blank' rel='noopener noreferrer'>smmmfrd</a> 2021</p>
             </div>
             {currentDoc.type === undefined &&
               <div className="nav--btn-holder">
