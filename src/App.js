@@ -212,7 +212,7 @@ export default function App() {
             closeCurrentDoc={closeCurrentDoc}
             docEdited={editCurrentDoc}
             deleteDoc={deleteCurrentDoc}
-            signedIn={user === null}
+            signedIn={currentId !== ""}
           />
         : (
           loading ? <h2>Loading</h2> :

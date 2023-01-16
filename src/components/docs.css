@@ -19,6 +19,7 @@
 
 .doc-display--button-container{
     height: 2em;
+    margin-top: 0.5em;
     padding: 0.25em;
     display: flex;
     gap: 0.5em;
